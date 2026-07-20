@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lifegit.local/schemas/privacy-map.schema.json",
+  "title": "LifeGit Privacy Map",
+  "type": "object",
+  "required": ["privacy_level", "entries", "kept_world_constraints"],
+  "additionalProperties": false,
+  "properties": {
+    "privacy_level": { "enum": ["light", "medium", "heavy"] },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["token", "original", "entity_type", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "token": { "type": "string" },
+          "original": { "type": "string" },
+          "entity_type": { "type": "string" },
+          "reason": { "type": "string" },
+          "restore_allowed": { "type": "boolean" }
+        }
+      }
+    },
+    "kept_world_constraints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["entity", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "entity": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "audit_notes": { "type": "array", "items": { "type": "string" } }
+  }
+}

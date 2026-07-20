@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lifegit.local/schemas/branch.schema.json",
+  "title": "LifeGit Branch Simulation",
+  "type": "object",
+  "required": ["branch_name", "base_commit", "alternative_choice", "disclaimer", "diff", "merge_back_action"],
+  "additionalProperties": false,
+  "properties": {
+    "branch_name": { "type": "string" },
+    "base_commit": { "type": "string" },
+    "alternative_choice": { "type": "string" },
+    "disclaimer": { "const": "这是模拟，不是事实。" },
+    "scenario_summary": { "type": "string" },
+    "outcomes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["description", "certainty"],
+        "additionalProperties": false,
+        "properties": {
+          "description": { "type": "string" },
+          "certainty": { "enum": ["high_certainty", "medium_possibility", "low_certainty_imagination"] },
+          "evidence": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "diff": { "type": "array", "items": { "type": "string" } },
+    "unchanged_constraints": { "type": "array", "items": { "type": "string" } },
+    "risks": { "type": "array", "items": { "type": "string" } },
+    "merge_back_action": { "type": "string" }
+  }
+}

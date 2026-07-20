@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lifegit.local/schemas/timeline.schema.json",
+  "title": "LifeGit Timeline Node",
+  "type": "object",
+  "required": ["id", "date", "place", "event", "people", "emotions", "importance_score", "can_checkout"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^tl_[a-z0-9_]+$" },
+    "date": { "type": "string" },
+    "place": { "type": "string" },
+    "event": { "type": "string" },
+    "people": { "type": "array", "items": { "type": "string" } },
+    "emotions": { "type": "array", "items": { "type": "string" } },
+    "importance_score": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "follow_up_impact": { "type": "string" },
+    "can_checkout": { "type": "boolean" },
+    "linked_event_id": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } }
+  }
+}

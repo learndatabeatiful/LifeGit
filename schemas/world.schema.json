@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lifegit.local/schemas/world.schema.json",
+  "title": "LifeGit World Constraint",
+  "type": "object",
+  "required": ["id", "type", "name_or_token", "constraint_summary", "privacy_treatment"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^world_[a-z0-9_]+$" },
+    "type": { "enum": ["city", "school", "company", "public_event", "culture", "geography", "era", "economy", "technology", "family_context", "other"] },
+    "name_or_token": { "type": "string" },
+    "constraint_summary": { "type": "string" },
+    "privacy_treatment": { "enum": ["keep", "tokenize", "generalize", "remove"] },
+    "why_it_matters": { "type": "string" },
+    "time_range": { "type": ["string", "null"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+  }
+}

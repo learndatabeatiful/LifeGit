@@ -1,0 +1,29 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify package manifest
+        run: python3 scripts/lifecycle.py verify --package .
+      - name: Run Python tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Run Web tests
+        working-directory: web
+        run: node --test

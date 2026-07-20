@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lifegit.local/schemas/life-world-model.schema.json",
+  "title": "LifeGit Life World Model",
+  "type": "object",
+  "required": [
+    "version",
+    "privacy_level",
+    "character_layer",
+    "world_layer",
+    "memory_layer",
+    "event_graph",
+    "timeline"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": "0.1"
+    },
+    "privacy_level": {
+      "enum": [
+        "manual",
+        "light",
+        "medium",
+        "heavy"
+      ]
+    },
+    "character_layer": {
+      "type": "array",
+      "items": {
+        "$ref": "character.schema.json"
+      }
+    },
+    "world_layer": {
+      "type": "array",
+      "items": {
+        "$ref": "world.schema.json"
+      }
+    },
+    "memory_layer": {
+      "type": "array",
+      "items": {
+        "$ref": "memory.schema.json"
+      }
+    },
+    "event_graph": {
+      "type": "array",
+      "items": {
+        "$ref": "event.schema.json"
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "$ref": "timeline.schema.json"
+      }
+    },
+    "branches": {
+      "type": "array",
+      "items": {
+        "$ref": "branch.schema.json"
+      }
+    },
+    "belief_snapshots": {
+      "type": "array",
+      "items": {
+        "$ref": "belief-snapshot.schema.json"
+      }
+    },
+    "place_layer": {
+      "type": "array",
+      "items": {
+        "$ref": "place.schema.json"
+      }
+    },
+    "passion_lines": {
+      "type": "array",
+      "items": {
+        "$ref": "passion.schema.json"
+      }
+    },
+    "creation_artifacts": {
+      "type": "array",
+      "items": {
+        "$ref": "creation.schema.json"
+      }
+    },
+    "semantic_records": {
+      "type": "array",
+      "items": {
+        "$ref": "semantic-record.schema.json"
+      }
+    },
+    "autobiography_plan_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "privacy_map_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

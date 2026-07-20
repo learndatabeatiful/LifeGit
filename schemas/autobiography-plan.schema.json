@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lifegit.local/schemas/autobiography-plan.schema.json",
+  "title": "LifeGit Autobiography Plan",
+  "type": "object",
+  "required": [
+    "version",
+    "source_model",
+    "core_questions",
+    "life_stages",
+    "chapter_plan",
+    "theme_lines",
+    "open_questions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": "0.1"
+    },
+    "source_model": {
+      "type": "string"
+    },
+    "writing_goal": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "core_questions": {
+      "type": "object",
+      "required": [
+        "how_i_became_me",
+        "what_shaped_me",
+        "how_i_want_to_be_understood"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "how_i_became_me": {
+          "type": "string"
+        },
+        "what_shaped_me": {
+          "type": "string"
+        },
+        "how_i_want_to_be_understood": {
+          "type": "string"
+        }
+      }
+    },
+    "life_stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "time_range",
+          "central_question",
+          "key_nodes"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^stage_[a-z0-9_]+$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "time_range": {
+            "type": "string"
+          },
+          "central_question": {
+            "type": "string"
+          },
+          "key_nodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "chapter_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "life_stage_id",
+          "summary",
+          "importance_weight",
+          "length_suggestion",
+          "theme_lines",
+          "evidence_map"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^ch_[a-z0-9_]+$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "life_stage_id": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "importance_weight": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "length_suggestion": {
+            "type": "string"
+          },
+          "theme_lines": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidence_map": {
+            "type": "object",
+            "required": [
+              "memory_ids",
+              "event_ids",
+              "character_ids",
+              "world_ids"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "memory_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "event_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "character_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "world_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "theme_lines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "summary",
+          "chapters"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "chapters": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
