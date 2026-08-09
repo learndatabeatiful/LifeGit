@@ -8,7 +8,9 @@
   "properties": {
     "branch_name": { "type": "string" },
     "base_commit": { "type": "string" },
+    "turning_point": { "type": "string" },
     "alternative_choice": { "type": "string" },
+    "sensitive_fact_rewrite_attempted": { "type": "boolean" },
     "disclaimer": { "const": "这是模拟，不是事实。" },
     "scenario_summary": { "type": "string" },
     "outcomes": {
@@ -27,6 +29,46 @@
     "diff": { "type": "array", "items": { "type": "string" } },
     "unchanged_constraints": { "type": "array", "items": { "type": "string" } },
     "risks": { "type": "array", "items": { "type": "string" } },
-    "merge_back_action": { "type": "string" }
+    "present_day_scenes": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["title", "description", "certainty"],
+        "additionalProperties": false,
+        "properties": {
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "certainty": { "enum": ["high_certainty", "medium_possibility", "low_certainty_imagination"] }
+        }
+      }
+    },
+    "main_branch_comparison": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["dimension", "main", "branch", "certainty"],
+        "additionalProperties": false,
+        "properties": {
+          "dimension": { "type": "string" },
+          "main": { "type": "string" },
+          "branch": { "type": "string" },
+          "certainty": { "enum": ["high_certainty", "medium_possibility", "low_certainty_imagination"] }
+        }
+      }
+    },
+    "merge_back_action": { "type": "string" },
+    "merge_back": {
+      "type": "object",
+      "required": ["unchangeable", "understanding", "optional_action"],
+      "additionalProperties": false,
+      "properties": {
+        "unchangeable": { "type": "string" },
+        "understanding": { "type": "string" },
+        "optional_action": { "type": "string" }
+      }
+    }
   }
 }

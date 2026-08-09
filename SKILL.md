@@ -1,6 +1,6 @@
 ---
 name: lifegit
-description: 当用户希望记录人生片段、从“回到那一天 / 最好的今天 / 后来的我们”开始三问、生成可分享文字卡，或继续进行 AI 自传、人生时间线、分支模拟与现实反思时使用。
+description: 当用户希望基于本次新提供且已脱敏确认的转折点，生成一个受现实约束、明确标注模拟边界并保存为本地三文件包的人生文字分支时使用。
 ---
 
 # LifeGit Skill v0.1
@@ -20,21 +20,25 @@ description: 当用户希望记录人生片段、从“回到那一天 / 最好�
 - 面对创伤、死亡、疾病、家庭冲突和感情遗憾时保持温柔、克制、谨慎。
 - 每次分支模拟都要以一个面向现实的小行动收尾。
 - 可信语义记录与安装包分离，保存到安装目录之外的 `~/Documents/LifeGit-data`；删除前先展示直接依赖，删除进入可恢复回收站，导出和恢复均不得覆盖现有记录。
-- 默认用 Skill 启动本地 Web 完成三入口与最多三问；会话可跳过、暂停和恢复，三问后立即生成原文成果，Agent 断线不阻断纯文字卡。
+- 默认用本次用户新提供的材料生成一个可信的文字分支；不默认复用旧的敏感输入，也不把任何模拟写成事实。
 
-## 默认本地 Web 入口
+## 默认文字分支入口
 
 当用户说“使用 `$lifegit` 打开 LifeGit”或表达等价意图时：
 
-1. 读取 `prompts/guided_session.md` 和 `prompts/web_agent_bridge.md`。
-2. 固定使用安装目录之外的 `~/Documents/LifeGit-data`；目录不存在或为空时安全初始化，已有 LifeGit 工作区直接复用，遇到非空未知目录立即停止且不删除任何内容。
-3. 根据当前会话实际可用工具登记 `text_ai` 和 `image_generation`。只有图片工具实际暴露时才登记图片能力；工具没有暴露模型 ID 时写 `null`，不得根据宿主名称猜测。
-4. 在 Skill 根目录运行 `python3 scripts/web_cli.py serve --open` 并保持服务会话运行。浏览器打开后由服务移除地址栏令牌。
-5. 用固定工作区运行 Agent bridge 命令：`python3 scripts/web_cli.py next-job --workspace ~/Documents/LifeGit-data --worker lifegit-codex --wait 30`。没有任务时结束当前等待，不循环消耗 token。
-6. 文字或图片能力失败时用 `fail-job` 写回可恢复错误；本地原文成果与纯文字卡继续可用。
-7. 页面关闭或 Agent 暂时离开都不删除会话；下次打开优先显示未完成和最近完成片段。
+1. 只使用本次用户新提供的材料，读取 `prompts/text_branch_intake.md` 完成文字 intake；不读取 `runs/`，不默认复用旧的敏感输入。先完成手动脱敏提醒与明确确认，再最多三个问题，允许跳过。
+2. 结构化记录死亡、疾病或创伤事实改写安全检查；只有 `sensitive_fact_rewrite_attempted=false` 才可用 `scripts/text_branch_session.py` 的 `save_confirmed_input()` 保存已确认输入，保存成功前不得进入生成阶段。
+3. Builder 只读取 `load_confirmed_input()` 返回的确认态输入，原样携带安全字段，并按 `prompts/text_branch_builder.md` 生成 Branch JSON。Builder 与 Renderer 必须分离。
+4. 用 `scripts/text_branch_package.py` 的 `validate_branch_payload()` 验证 Branch。只有通过 Branch validator 的 Branch 才能交给 `prompts/text_narrative_renderer.md`；Renderer 只能读取已验证的 Branch，不回看原始材料。
+5. Renderer 输出完整 `story.md` 后，用 `validate_package_payload()` 执行 package validator；通过后才调用 `save_branch_package()`，在 `~/Documents/LifeGit-data/branches/<branch_id>/` 写入 `metadata.json`、`branch.json` 和 `story.md`。
+6. 在 Codex 中展示完整 story 和保存后的本地路径。若本地写入失败，仍直接展示完整 story，并明确报告“未保存”；不得声称完成。
+7. 用户可以选择结束、修正事实、调整口吻或另开分支。任何修正都必须使用新的 branch ID，拒绝覆盖旧分支。
 
-## 标准流程
+Validator 失败时，返回具体缺失字段或章节，只允许一次针对该缺口的定向修正。再次失败时保留确认态输入并停止，不渲染、不保存，也不进入完成目录。
+
+P1 默认流程不启动 Web，不登记 Agent worker，不创建生图任务。现有 Web 路由是冻结的非默认能力：保留其实现与发行兼容性，但 P1 不调用。至少三次用户真实发起的验证完成前，不启动网页回装。
+
+## 其他非默认工作流
 
 1. 阅读用户提供的回忆或采访回答。
 2. 只有在关键字段缺失时，才追问 1-3 个问题。
@@ -54,7 +58,7 @@ description: 当用户希望记录人生片段、从“回到那一天 / 最好�
 ## 资源路由
 
 - 人生采访：读取 `prompts/interviewer.md`。
-- 本地 Web 与 Agent 桥接：读取 `prompts/guided_session.md` 和 `prompts/web_agent_bridge.md`，用 `scripts/web_cli.py` 启动服务、登记能力并领取任务。
+- 冻结 Web 兼容能力：`prompts/guided_session.md`、`prompts/web_agent_bridge.md` 与相关实现只为回归和兼容保留，不属于 P1 默认流程，不由 `$lifegit` 自动调用。
 - 三入口领域逻辑：用 `scripts/guided_session.py` 保存、恢复和完成会话；用 `scripts/share_projection.py` 生成原文成果与版本化文字卡。
 - 隐私处理：读取 `policies/privacy_strategy.md`、`prompts/privacy_confirmation.md` 和 `prompts/privacy_sanitizer.md`。真实数据只保存在 `~/Documents/LifeGit-data`，不得写入 Skill 安装目录。
 - 模型抽取：读取 `prompts/character_extractor.md`、`prompts/memory_extractor.md`、`prompts/world_model_builder.md` 和 `prompts/event_graph_builder.md`。
