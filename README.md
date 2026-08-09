@@ -2,7 +2,7 @@
 
 从本次新提供、已脱敏确认的一个人生转折点，生成一份受现实约束的“另一种今天”。
 
-> 当前正式支持：macOS + Codex 桌面版｜版本：v0.1.0｜作者：learndatabeatiful
+> 当前正式支持：macOS + Codex 桌面版｜版本：v0.2.0｜作者：learndatabeatiful
 
 ## 现在就安装
 
@@ -99,4 +99,4 @@ Codex 会先说明当前版和目标版，验证下载包并备份旧程序，�
 
 ## 边界
 
-v0.1.0 不提供云同步、遥测、社交平台直发、心理治疗或确定性人生预测。WorkBuddy、Claude Code、OpenClaw 和 Hermes 可以尝试通用 Skill 安装，但尚未列入正式支持范围。
+v0.2.0 不提供云同步、遥测、社交平台直发、心理治疗或确定性人生预测。WorkBuddy、Claude Code、OpenClaw 和 Hermes 可以尝试通用 Skill 安装，但尚未列入正式支持范围。
