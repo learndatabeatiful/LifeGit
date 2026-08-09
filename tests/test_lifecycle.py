@@ -118,6 +118,17 @@ class LifecycleTests(unittest.TestCase):
             lifecycle._assert_not_data_path(Path.home() / ".codex" / "skills" / "lifegit")
             self.assertEqual((installed / "marker.txt").read_text(), "old")
 
+    def test_protected_data_root_follows_current_home_without_foreign_account_path(self):
+        from unittest.mock import patch
+        from scripts import lifecycle
+
+        current_home = Path("/").joinpath("Users", "alice")
+        foreign_home = Path("/").joinpath("Users", "pika")
+        with patch.object(lifecycle.Path, "home", return_value=current_home):
+            with self.assertRaisesRegex(ValueError, "data directories"):
+                lifecycle._assert_not_data_path(current_home / "Documents")
+            lifecycle._assert_not_data_path(foreign_home)
+
     def test_verify_requires_one_exact_frontmatter_name(self):
         invalid_skills = {
             "prefix": "---\nname: lifegit-evil\n---\n",
@@ -225,6 +236,20 @@ class LifecycleTests(unittest.TestCase):
                     activate_package(package, installed, root / "backups")
             self.assertEqual((installed / "marker.txt").read_text(), "old")
             self.assertEqual(list((root / "skills").glob(".lifegit-stage-*")), [])
+
+    def test_verify_ignores_runtime_bytecode_cache_and_activate_does_not_install_it(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            package = make_package(root / "download" / "lifegit", "0.2.0", "new")
+            cache = package / "scripts" / "__pycache__"
+            cache.mkdir(parents=True)
+            (cache / "package_manifest.cpython-312.pyc").write_bytes(b"runtime cache")
+
+            self.assertEqual(verify_package(package), "0.2.0")
+
+            installed = make_package(root / "skills" / "lifegit", "0.1.0", "old")
+            activate_package(package, installed, root / "backups")
+            self.assertFalse((installed / "scripts" / "__pycache__").exists())
 
     def test_rejects_python_bytecode_in_manifest(self):
         with tempfile.TemporaryDirectory() as tmp:

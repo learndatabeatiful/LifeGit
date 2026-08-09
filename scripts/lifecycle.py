@@ -16,16 +16,13 @@ except ModuleNotFoundError:
     from package_manifest import verify_public_manifest
 
 
-_COPY_IGNORE = shutil.ignore_patterns(".git")
+_COPY_IGNORE = shutil.ignore_patterns(".git", "__pycache__", ".DS_Store")
 _VERSION = re.compile(r"\d+(?:\.\d+)*")
 _FRONTMATTER_FIELD = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*)\s*:\s*(.*?)\s*$")
 
 
-def _protected_data_roots() -> tuple[Path, Path]:
-    return (
-        (Path.home() / "Documents" / "LifeGit-data").resolve(),
-        Path("/").joinpath("Users", "pika", "LifeGit-data").resolve(),
-    )
+def _protected_data_roots() -> tuple[Path, ...]:
+    return ((Path.home() / "Documents" / "LifeGit-data").resolve(),)
 
 
 def _assert_not_data_path(path: Path) -> None:
@@ -66,10 +63,12 @@ def _validate_package_tree(root: Path, allow_root_git: bool) -> None:
             continue
         if path.is_symlink():
             raise ValueError(f"symbolic links are not allowed in a LifeGit package: {path}")
+        if "__pycache__" in relative.parts or path.name == ".DS_Store":
+            continue
         for part in relative.parts:
             if part == ".github":
                 continue
-            if part.startswith(".") or part == "__pycache__":
+            if part.startswith("."):
                 raise ValueError(f"cache or hidden path is not allowed: {relative}")
         if path.is_file() and path.suffix in {".pyc", ".pyo"}:
             raise ValueError(f"cache or hidden path is not allowed: {relative}")

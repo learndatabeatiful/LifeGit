@@ -199,6 +199,8 @@ class WorkspaceStoreTests(unittest.TestCase):
 
             self.assertEqual(marker.read_text(encoding="utf-8"), "保留")
             self.assertTrue((root / "outputs" / "cards").is_dir())
+            self.assertTrue((root / "branches").is_dir())
+            self.assertTrue((root / "branches" / ".pending").is_dir())
 
     def test_save_export_trash_and_restore_record(self):
         with tempfile.TemporaryDirectory() as tmp:

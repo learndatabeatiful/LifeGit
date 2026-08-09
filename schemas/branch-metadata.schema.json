@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lifegit.local/schemas/branch-metadata.schema.json",
+  "title": "LifeGit Text Branch Metadata",
+  "type": "object",
+  "required": ["title", "created_at", "generator_version", "status", "privacy_mode", "source_pointer"],
+  "additionalProperties": false,
+  "properties": {
+    "title": { "type": "string" },
+    "created_at": { "type": "string" },
+    "generator_version": { "const": "lifegit-text-branch-v1" },
+    "status": { "const": "completed" },
+    "privacy_mode": { "enum": ["manual", "light", "medium", "heavy"] },
+    "source_pointer": { "type": "string", "pattern": "^sessions/[a-z0-9_]+\\.text-branch\\.json$" }
+  }
+}

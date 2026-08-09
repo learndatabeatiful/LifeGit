@@ -88,6 +88,8 @@ def ensure_workspace_layout(root: Path) -> Path:
         "outputs/cards",
         "outputs/images",
         "runtime",
+        "branches",
+        "branches/.pending",
     ):
         (root / relative).mkdir(parents=True, exist_ok=True)
     return manifest_path
